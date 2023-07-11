@@ -9,8 +9,10 @@ Follow this Documentation :
 - https://sequelize.org/docs/v6/core-concepts/model-querying-basics/
 - https://sequelize.org/docs/v6/core-concepts/model-querying-finders/
 */
-
+const { StatusCodes } = require("http-status-codes")
 const { Logger } = require("../config");
+const AppError = require("../utils/errors/app-error");
+
 class CrudRepository {
   constructor(model) {
     this.model = model;
@@ -20,52 +22,37 @@ class CrudRepository {
     return response;
   }
   async destroy(data) {
-    try {
-      const response = await this.model.destroy({
-        where: {
-          id: data,
-        },
-      }); // delete data query based on id.
-      return response;
-    } catch (error) {
-      Logger.error(
-        "Something went wrong in the CRUD Repo : destroy() function"
-      );
-      throw error; // catch the error in the service layer and manipulate this error more logically and create more custom error objects.
-    }
+    const response = await this.model.destroy({
+      where: {
+        id: data,
+      },
+    });
+    if(!response){
+      throw new AppError('Airplane not found',StatusCodes.NOT_FOUND)
+    } // delete data query based on id.
+    return response;
   }
+
   async get(data) {
-    try {
-      const response = await this.model.findByPk(data); // find data query based on Primary Key
-      return response;
-    } catch (error) {
-      Logger.error("Something went wrong in the CRUD Repo : get() function");
-      throw error; // catch the error in the service layer and manipulate this error more logically and create more custom error objects.
-    }
+    const response = await this.model.findByPk(data);
+    if(!response){
+      throw new AppError('Airplane not found',StatusCodes.NOT_FOUND)
+    } // find data query based on Primary Key
+    return response;
+
   }
+
   async getAll() {
-    try {
-      const response = await this.model.findAll(); // find all the data query
-      return response;
-    } catch (error) {
-      Logger.error("Something went wrong in the CRUD Repo : getAll() function");
-      throw error; // catch the error in the service layer and manipulate this error more logically and create more custom error objects.
-    }
+    const response = await this.model.findAll(); // find all the data query
+    return response;
   }
-  async update(id, data) {
-    // data -> {col: value, ....}, data should be an object over here.
-    try {
-      const response = await this.model.update(data, {
-        // update data query based on id
+  async update(id, data) { // data -> {col: value, ....}
+    const response = await this.model.update(data, {
         where: {
-          id: id,
-        },
-      });
-      return response;
-    } catch (error) {
-      Logger.error("Something went wrong in the CRUD Repo : update() function");
-      throw error; // catch the error in the service layer and manipulate this error more logically and create more custom error objects.
-    }
+            id: id
+        }
+    })
+    return response;
   }
 }
 module.exports = CrudRepository;

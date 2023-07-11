@@ -2,6 +2,7 @@ const { ServerConfig, Logger } = require("./config"); // If u are requiring from
 const { AboutController, HomeController } = require("./controllers");
 const express = require("express");
 const apiRoutes = require("./routes");
+const city = require("./models/city");
 const app = express();
 /*
 By default ExpressJS doesnot know how to read the req.body.
@@ -24,8 +25,7 @@ upcoming routes that are mentioned below it.
 */
 
 app.use("/api", apiRoutes); // import apiRoutes from the ./routes folder & whenever somebody gives me an URL that starts with /api I will redirect all the requests to the apiRoutes. | |  Link : http://localhost:3000/api
-
-app.listen(ServerConfig.PORT, () => {
+app.listen(ServerConfig.PORT, async () => {
   console.log(`Server is up and running on PORT: ${ServerConfig.PORT}`);
   Logger.info("Successfully started the Server!", "root");
 });
@@ -51,3 +51,8 @@ We know how to use middlewares inside the app.get() / app.post(), but instead of
 */
 
 // `npm run dev` -> To start & run the Server.
+
+
+//bad code alerts 
+
+
