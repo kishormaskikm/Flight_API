@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx nodemon src/index.js"
   },
-  "author": "Arijit Sarkar",
+  "author": "Kishor Maski",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
